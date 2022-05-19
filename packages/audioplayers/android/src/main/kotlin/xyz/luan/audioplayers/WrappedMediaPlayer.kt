@@ -110,6 +110,9 @@ class WrappedMediaPlayer internal constructor(
                 }
                 prepared = false
                 seek(position)
+                if (Build.VERSION.SDK_INT >= 23) {
+                    it.playbackParams = it.playbackParams.setSpeed(this.rate)
+                }
             }
         }
     }
