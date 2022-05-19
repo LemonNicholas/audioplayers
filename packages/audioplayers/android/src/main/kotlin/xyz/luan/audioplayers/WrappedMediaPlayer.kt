@@ -4,6 +4,7 @@ import android.content.Context
 import android.media.*
 import android.os.Build
 import android.os.PowerManager
+import android.util.Log
 
 class WrappedMediaPlayer internal constructor(
         private val ref: AudioplayersPlugin,
@@ -97,16 +98,18 @@ class WrappedMediaPlayer internal constructor(
             }
             this.playingRoute = playingRoute
             val position = player?.currentPosition ?: 0
+            Log.wtf(WrappedMediaPlayer::class.java.simpleName, "position : $position")
             released = false
             player = createPlayer().also {
                 it.setDataSource(url)
                 it.prepare()
 
-                seek(position)
                 if (wasPlaying) {
                     playing = true
                     it.start()
                 }
+                prepared = false
+                seek(position)
             }
         }
     }
@@ -278,6 +281,7 @@ class WrappedMediaPlayer internal constructor(
     override fun seek(position: Int) {
         if (prepared) {
             player?.seekTo(position)
+            Log.wtf(WrappedMediaPlayer::class.java.simpleName, "prepared : $prepared ; position 2: $position")
         } else {
             shouldSeekTo = position
         }
@@ -293,6 +297,7 @@ class WrappedMediaPlayer internal constructor(
             player?.start()
             ref.handleIsPlaying()
         }
+        Log.wtf(WrappedMediaPlayer::class.java.simpleName, "prepared : $prepared ; position 3: $shouldSeekTo")
         if (shouldSeekTo >= 0) {
             player?.seekTo(shouldSeekTo)
             shouldSeekTo = -1
