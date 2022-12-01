@@ -79,6 +79,7 @@ class MediaPlayerPlayer(
     override fun updateContext(context: AudioContextAndroid) {
         // TODO(luan) is this global?
         wrappedPlayer.audioManager.isSpeakerphoneOn = context.isSpeakerphoneOn
+        wrappedPlayer.audioManager.mode = AudioManager.MODE_IN_COMMUNICATION
         context.setAttributesOnPlayer(mediaPlayer)
         if (context.stayAwake) {
             mediaPlayer.setWakeMode(wrappedPlayer.applicationContext, PowerManager.PARTIAL_WAKE_LOCK)
